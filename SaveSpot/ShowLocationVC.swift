@@ -20,14 +20,14 @@ class ShowLocationVC: UIViewController, MKMapViewDelegate, CLLocationManagerDele
     let locationMgr = CLLocationManager()
     var myPosition = CLLocationCoordinate2D()
     
-    @IBAction func closePressed(sender: AnyObject) {
-        dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func closePressed(_ sender: AnyObject) {
+        dismiss(animated: true, completion: nil)
     }
     
     @IBOutlet weak var mapView: MKMapView!
-    func mapView(mapView: MKMapView, rendererForOverlay overlay: MKOverlay) -> MKOverlayRenderer{
+    func mapView(_ mapView: MKMapView, rendererFor overlay: MKOverlay) -> MKOverlayRenderer{
         let draw = MKPolylineRenderer(overlay: overlay)
-        draw.strokeColor = UIColor.purpleColor()
+        draw.strokeColor = UIColor.purple
         draw.lineWidth = 3.0
         return draw
     }
@@ -72,7 +72,7 @@ class ShowLocationVC: UIViewController, MKMapViewDelegate, CLLocationManagerDele
         destination = MKMapItem(placemark: placeMark)
         
         let request = MKDirectionsRequest()
-        request.source = MKMapItem.mapItemForCurrentLocation()
+        request.source = MKMapItem.forCurrentLocation()
         request.destination = destination
         request.requestsAlternateRoutes = false
         
@@ -80,7 +80,7 @@ class ShowLocationVC: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             return
         }
         let directions = MKDirections(request: request)
-        directions.calculateDirectionsWithCompletionHandler{
+        directions.calculate{
             response, error in
             guard let response = response else {
                 //handle the error here
@@ -90,8 +90,8 @@ class ShowLocationVC: UIViewController, MKMapViewDelegate, CLLocationManagerDele
             self.mapView.removeOverlays(overlays)
             
             for route in response.routes {
-                self.mapView.addOverlay(route.polyline,
-                    level: MKOverlayLevel.AboveRoads)
+                self.mapView.add(route.polyline,
+                    level: MKOverlayLevel.aboveRoads)
                 for next  in route.steps {
                     print(next.instructions)
                 }
